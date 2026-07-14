@@ -138,6 +138,11 @@ export default function App() {
   
   const chatEndRef = useRef(null);
 
+  // Wake up backend and AI service on app load
+  useEffect(() => {
+    fetch(`${API_BASE}/health`).catch(() => {});
+  }, []);
+
   // Sync token and session
   useEffect(() => {
     if (token) {
