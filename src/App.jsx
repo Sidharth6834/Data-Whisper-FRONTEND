@@ -136,11 +136,40 @@ export default function App() {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [expandedCodeIndex, setExpandedCodeIndex] = useState(null);
   
+  const [isSystemReady, setIsSystemReady] = useState(false);
+  
   const chatEndRef = useRef(null);
 
-  // Wake up backend and AI service on app load
+  // Polling check to wake up backend and AI service on app load
   useEffect(() => {
-    fetch(`${API_BASE}/health`).catch(() => {});
+    let active = true;
+    const checkHealth = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/health`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === 'ok') {
+            if (active) {
+              setIsSystemReady(true);
+            }
+            return;
+          }
+        }
+      } catch (err) {
+        console.log("Waking up services...");
+      }
+      
+      // Retry in 4 seconds if not ready
+      if (active) {
+        setTimeout(checkHealth, 4000);
+      }
+    };
+
+    checkHealth();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Sync token and session
@@ -1045,23 +1074,31 @@ export default function App() {
         <div className="sidebar-section" style={{ marginTop: 'auto' }}>
           <div className="sidebar-label">Active Dataset</div>
           {!dataset ? (
-            <div 
-              className={`dropzone ${isDragActive ? 'active' : ''}`}
-              onDragOver={e => { e.preventDefault(); setIsDragActive(true); }}
-              onDragLeave={() => setIsDragActive(false)}
-              onDrop={handleFileDrop}
-              onClick={() => document.getElementById('file-picker').click()}
-            >
-              <div className="dropzone-icon">📥</div>
-              <div className="dropzone-text">Drag or browse dataset</div>
-              <input 
-                type="file" 
-                id="file-picker" 
-                style={{ display: 'none' }} 
-                onChange={handleFileSelect} 
-                accept=".csv, .xlsx, .xls, .json"
-              />
-            </div>
+            !isSystemReady ? (
+              <div className="dropzone disabled" style={{ cursor: 'not-allowed', borderColor: 'rgba(168, 85, 247, 0.2)', background: 'rgba(168, 85, 247, 0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.25rem', textAlign: 'center' }}>
+                <div style={{ width: '1.5rem', height: '1.5rem', border: '3px solid rgba(168, 85, 247, 0.3)', borderTopColor: 'var(--color-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: '0.5rem' }}></div>
+                <div style={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--color-text-primary)' }}>Waking up AI Engine...</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)', marginTop: '0.2rem' }}>Free servers take ~30s to boot up.</div>
+              </div>
+            ) : (
+              <div 
+                className={`dropzone ${isDragActive ? 'active' : ''}`}
+                onDragOver={e => { e.preventDefault(); setIsDragActive(true); }}
+                onDragLeave={() => setIsDragActive(false)}
+                onDrop={handleFileDrop}
+                onClick={() => document.getElementById('file-picker').click()}
+              >
+                <div className="dropzone-icon">📥</div>
+                <div className="dropzone-text">Drag or browse dataset</div>
+                <input 
+                  type="file" 
+                  id="file-picker" 
+                  style={{ display: 'none' }} 
+                  onChange={handleFileSelect} 
+                  accept=".csv, .xlsx, .xls, .json"
+                />
+              </div>
+            )
           ) : (
             <div className="active-dataset-card">
               <div className="dataset-icon-wrapper">
