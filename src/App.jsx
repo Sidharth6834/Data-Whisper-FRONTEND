@@ -4,7 +4,7 @@ const API_BASE = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE |
 
 const PROVIDER_MODELS = {
   Gemini: ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.5-pro', 'gemini-1.5-flash', 'gemini-1.5-pro'],
-  Groq: ['llama-3.3-70b-versatile', 'llama3-8b-8192', 'mixtral-8x7b-32768']
+  Groq: ['groq/compound', 'groq/compound-mini', 'qwen/qwen3.6-27b', 'openai/gpt-oss-20b', 'llama-3.3-70b-versatile']
 };
 
 // Inline SVG Icons
@@ -116,7 +116,7 @@ export default function App() {
 
   // UI Modes
   const [provider, setProvider] = useState('Groq');
-  const [model, setModel] = useState('llama-3.3-70b-versatile');
+  const [model, setModel] = useState('groq/compound');
   const [apiKey, setApiKey] = useState('');
   const [analysisMode, setAnalysisMode] = useState('Predictive');
 
