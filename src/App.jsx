@@ -143,6 +143,26 @@ export default function App() {
   
   const [isSystemReady, setIsSystemReady] = useState(false);
   
+  // Toast Notification State
+  const [toast, setToast] = useState({ visible: false, message: '', type: 'info' });
+  const showToast = (message, type = 'info') => {
+    setToast({ visible: true, message, type });
+    setTimeout(() => {
+      setToast(prev => ({ ...prev, visible: false }));
+    }, 3500);
+  };
+
+  // Share Modal State
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+
+  // Attachment File Input Ref
+  const attachmentInputRef = useRef(null);
+
+  // Voice Input (Speech Recognition) State & Ref
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
+  
   const chatEndRef = useRef(null);
 
   // Polling check to wake up backend and AI service on app load
@@ -530,6 +550,121 @@ export default function App() {
   const handleFileSelect = (e) => {
     if (e.target.files && e.target.files[0]) {
       uploadFileToServer(e.target.files[0]);
+    }
+  };
+
+  // Attachment Paperclip Click Handler
+  const handleAttachmentClick = () => {
+    if (attachmentInputRef.current) {
+      attachmentInputRef.current.click();
+    }
+  };
+
+  const handleAttachmentFileSelect = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      uploadFileToServer(file);
+      showToast(`📁 Uploading dataset: ${file.name}`, 'info');
+      e.target.value = '';
+    }
+  };
+
+  // Voice Speech-to-Text Recognition Toggle
+  const toggleVoiceInput = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      showToast("⚠️ Voice recognition is not supported in this browser. Try Google Chrome or Microsoft Edge.", "warning");
+      return;
+    }
+
+    if (isListening) {
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch (err) {}
+      }
+      setIsListening(false);
+      showToast("🎙️ Voice input stopped.", "info");
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        showToast("🎙️ Listening... Speak your prompt now", "info");
+      };
+
+      recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        setPrompt(prev => (prev ? `${prev} ${transcript}` : transcript));
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        setIsListening(false);
+        if (event.error === 'not-allowed') {
+          showToast("⚠️ Microphone access denied. Please allow mic permissions.", "error");
+        } else if (event.error !== 'no-speech') {
+          showToast(`⚠️ Voice error: ${event.error}`, "warning");
+        }
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      console.error("Failed to start speech recognition:", err);
+      setIsListening(false);
+      showToast("⚠️ Unable to start voice recognition.", "error");
+    }
+  };
+
+  // Share Actions
+  const handleCopyShareLink = () => {
+    const shareUrl = `${window.location.origin}${window.location.pathname}?session=${sessionId || 'live'}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setShareCopied(true);
+      showToast("✅ Share link copied to clipboard!", "success");
+      setTimeout(() => setShareCopied(false), 2500);
+    }).catch(() => {
+      showToast("⚠️ Failed to copy link to clipboard", "error");
+    });
+  };
+
+  const handleExportChatJSON = () => {
+    if (!messages || messages.length === 0) {
+      showToast("⚠️ No chat history available to export.", "warning");
+      return;
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(messages, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `datawhisperer_chat_${sessionId || 'export'}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    showToast("📥 Exported chat session to JSON!", "success");
+  };
+
+  const handleNativeShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'DataWhisperer Analysis',
+        text: dataset ? `Check out my dataset analysis for ${dataset.filename} on DataWhisperer!` : 'Check out DataWhisperer AI Data Analytics!',
+        url: window.location.href,
+      }).catch(console.error);
+    } else {
+      handleCopyShareLink();
     }
   };
 
@@ -1413,7 +1548,7 @@ export default function App() {
             </div>
           </div>
           <div className="header-action-group">
-            <button className="btn-secondary" style={{ padding: '0.4rem 0.75rem', fontSize: '0.75rem' }} onClick={() => alert('Invite Link copied to Clipboard!')}>
+            <button className="btn-secondary" style={{ padding: '0.4rem 0.75rem', fontSize: '0.75rem' }} onClick={() => setShowShareModal(true)} title="Share Analysis Session">
               <Icons.Share /> Share
             </button>
             <span style={{ color: 'rgba(255,255,255,0.2)', pointerEvents: 'none' }}><Icons.Broadcast /></span>
@@ -1558,17 +1693,27 @@ export default function App() {
             <button 
               type="button" 
               className="chat-input-action-btn"
-              onClick={() => alert('Attachment system: Select a file to append.')}
+              onClick={handleAttachmentClick}
+              title="Upload dataset attachment (.csv, .xlsx, .json)"
             >
               <Icons.Paperclip />
             </button>
+            <input 
+              type="file" 
+              ref={attachmentInputRef} 
+              style={{ display: 'none' }} 
+              accept=".csv, .xlsx, .xls, .json" 
+              onChange={handleAttachmentFileSelect} 
+            />
             <input 
               type="text" 
               className="chat-input" 
               placeholder={
                 loading 
                   ? "⚡ DataWhisperer AI is processing your request..." 
-                  : (dataset ? "Ask about EMEA trends or dataset specifics..." : "Please upload a dataset first")
+                  : (isListening 
+                      ? "🎙️ Listening... Speak your prompt now..." 
+                      : (dataset ? "Ask about EMEA trends or dataset specifics..." : "Please upload a dataset first"))
               }
               disabled={!dataset || loading}
               value={prompt}
@@ -1576,8 +1721,9 @@ export default function App() {
             />
             <button 
               type="button" 
-              className="chat-input-action-btn"
-              onClick={() => alert('Voice activation: Dictate your analysis query.')}
+              className={`chat-input-action-btn ${isListening ? 'listening-active' : ''}`}
+              onClick={toggleVoiceInput}
+              title={isListening ? "Stop Voice Listening" : "Dictate query with Voice"}
             >
               <Icons.Mic />
             </button>
@@ -1683,6 +1829,68 @@ export default function App() {
               Log Out
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Share Modal Overlay */}
+      {showShareModal && (
+        <div className="modal-overlay" onClick={() => setShowShareModal(false)}>
+          <div className="modal-card share-modal" onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 className="modal-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Icons.Share /> Share Analysis Session
+              </h3>
+              <button 
+                onClick={() => setShowShareModal(false)}
+                style={{ background: 'none', border: 'none', color: 'var(--color-text-muted)', fontSize: '1.2rem', cursor: 'pointer', padding: 0 }}
+                title="Close Modal"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginBottom: '1.25rem', lineHeight: '1.5' }}>
+              Share your conversational dataset session, query results, and visual insights with your team.
+            </p>
+
+            {/* Share Link Input */}
+            <div className="share-link-group" style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem' }}>
+              <input 
+                type="text" 
+                readOnly 
+                className="chat-input" 
+                value={`${window.location.origin}${window.location.pathname}?session=${sessionId || 'live'}`}
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-color)', borderRadius: '8px', fontSize: '0.8rem', padding: '0.6rem 0.8rem', flexGrow: 1 }}
+              />
+              <button 
+                className="btn-gradient" 
+                onClick={handleCopyShareLink}
+                style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              >
+                {shareCopied ? '✓ Copied!' : '📋 Copy Link'}
+              </button>
+            </div>
+
+            {/* Additional Actions */}
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+              {navigator.share && (
+                <button className="btn-secondary" style={{ flex: 1 }} onClick={handleNativeShare}>
+                  📲 Share via App
+                </button>
+              )}
+              <button className="btn-secondary" style={{ flex: 1 }} onClick={handleExportChatJSON}>
+                📥 Export Chat JSON
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Toast Notification */}
+      {toast.visible && (
+        <div className={`app-toast toast-${toast.type}`}>
+          <span className="toast-text">{toast.message}</span>
+          <button className="toast-close-btn" onClick={() => setToast(prev => ({ ...prev, visible: false }))}>✕</button>
         </div>
       )}
     </div>
