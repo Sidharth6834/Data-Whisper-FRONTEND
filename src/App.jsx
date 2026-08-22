@@ -96,7 +96,7 @@ export default function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
   const [displayName, setDisplayName] = useState(localStorage.getItem('displayName') || '');
-  const [authMode, setAuthMode] = useState('LOGIN'); // LOGIN, REGISTER, FORGOT_PASSWORD, RESET_PASSWORD
+  const [authMode, setAuthMode] = useState('LANDING'); // LANDING, LOGIN, REGISTER, FORGOT_PASSWORD, RESET_PASSWORD
   const [loginEmail, setLoginEmail] = useState('admin@company.com');
   const [loginPass, setLoginPass] = useState('password123');
   
@@ -622,16 +622,239 @@ export default function App() {
     return str;
   };
 
-  // Render Login Screen if not authenticated
+  // Render Landing Page / Auth Screens if not authenticated
   if (!token) {
+    if (authMode === 'LANDING') {
+      return (
+        <div className="landing-page">
+          {/* Navbar */}
+          <header className="landing-navbar">
+            <div className="landing-brand" onClick={() => setAuthMode('LANDING')}>
+              <Icons.Spark /> DataWhisperer
+            </div>
+            <nav className="landing-nav-links">
+              <a href="#home" className="landing-nav-link">Home</a>
+              <a href="#features" className="landing-nav-link">Features</a>
+              <a href="#about" className="landing-nav-link">About Us</a>
+              <a href="#developer" className="landing-nav-link">Developer</a>
+              <a href="#contact" className="landing-nav-link">Contact</a>
+            </nav>
+            <div className="landing-nav-actions">
+              <button 
+                className="btn-nav-outline"
+                onClick={() => { setAuthMode('LOGIN'); setAuthError(''); setAuthSuccessMessage(''); }}
+              >
+                Log In
+              </button>
+              <button 
+                className="btn-nav-primary"
+                onClick={() => { setAuthMode('REGISTER'); setAuthError(''); setAuthSuccessMessage(''); }}
+              >
+                Register Free
+              </button>
+            </div>
+          </header>
+
+          {/* Hero Section */}
+          <section id="home" className="landing-hero">
+            <div>
+              <div className="hero-pill-badge">
+                <Icons.Spark /> Conversational Data Analytics Engine
+              </div>
+              <h1 className="hero-title">
+                Transform Raw Data into <span className="gradient-span">Conversational Intelligence</span>
+              </h1>
+              <p className="hero-subtitle">
+                Upload CSV, Excel, or JSON datasets and ask complex analytical questions in plain English. Powered by isolated Python sandbox execution and high-speed Groq & Gemini LLM orchestrations.
+              </p>
+              <div className="hero-cta-group">
+                <button 
+                  className="btn-gradient" 
+                  style={{ width: 'auto', padding: '0.85rem 2rem' }}
+                  onClick={() => { setAuthMode('REGISTER'); setAuthError(''); setAuthSuccessMessage(''); }}
+                >
+                  Get Started Free <span>→</span>
+                </button>
+                <button 
+                  className="btn-nav-outline" 
+                  style={{ borderRadius: '12px', padding: '0.85rem 1.75rem', fontSize: '0.9rem' }}
+                  onClick={() => { setAuthMode('LOGIN'); setAuthError(''); setAuthSuccessMessage(''); }}
+                >
+                  Sign In to Dashboard
+                </button>
+              </div>
+              <div className="hero-metrics-row">
+                <div className="hero-metric-item">
+                  <h4>100%</h4>
+                  <p>Secure Sandbox</p>
+                </div>
+                <div className="hero-metric-item">
+                  <h4>&lt; 2s</h4>
+                  <p>Fast LLM Response</p>
+                </div>
+                <div className="hero-metric-item">
+                  <h4>Multi-LLM</h4>
+                  <p>Groq, Gemini & OpenAI</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Visual Interactive Mockup Card */}
+            <div className="hero-mockup-card">
+              <div className="mockup-header">
+                <div className="mockup-dots">
+                  <span className="mockup-dot red"></span>
+                  <span className="mockup-dot yellow"></span>
+                  <span className="mockup-dot green"></span>
+                </div>
+                <span style={{ fontSize: '0.75rem', color: 'var(--color-primary)', fontWeight: 600 }}>LIVE DEMO MOCKUP</span>
+              </div>
+              <div className="mockup-prompt-box">
+                <Icons.Spark /> "Show sales comparison by region and plot a bar chart"
+              </div>
+              <div className="mockup-chart-container">
+                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.75rem', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>📈 Regional Revenue Distribution</span>
+                  <span style={{ color: 'var(--color-primary)' }}>Pandas Executed ✓</span>
+                </div>
+                <div className="mockup-bars">
+                  <div className="mockup-bar" style={{ height: '40%' }}></div>
+                  <div className="mockup-bar" style={{ height: '75%' }}></div>
+                  <div className="mockup-bar" style={{ height: '60%' }}></div>
+                  <div className="mockup-bar" style={{ height: '95%' }}></div>
+                  <div className="mockup-bar" style={{ height: '50%' }}></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Features Section */}
+          <section id="features" className="landing-section">
+            <div className="section-header">
+              <h2 className="section-title">Engineered for High-Speed Analysis</h2>
+              <p className="section-subtitle">DataWhisperer combines automated Python AST execution with cutting-edge LLMs to deliver accurate data insights without writing code.</p>
+            </div>
+            <div className="features-grid">
+              <div className="feature-card">
+                <div className="feature-icon-wrapper">💬</div>
+                <h3>Natural Language Queries</h3>
+                <p>Ask questions in natural human language. The AI agent generates and runs exact Pandas code against your pre-loaded dataset.</p>
+              </div>
+              <div className="feature-card">
+                <div className="feature-icon-wrapper">📊</div>
+                <h3>Instant Visualizations</h3>
+                <p>Automatically renders clean Matplotlib bar graphs, pie charts, line trends, and distribution histograms upon prompt request.</p>
+              </div>
+              <div className="feature-card">
+                <div className="feature-icon-wrapper">🛡️</div>
+                <h3>Secure AST Sandbox</h3>
+                <p>Executes code in an isolated local sandbox with AST static analysis, protecting against unauthorized file system or network access.</p>
+              </div>
+              <div className="feature-card">
+                <div className="feature-icon-wrapper">⚡</div>
+                <h3>High-Speed Groq Engine</h3>
+                <p>Powered by Groq LPU speed acceleration and Qwen 27B / GPT-OSS models for sub-second analytical generation.</p>
+              </div>
+              <div className="feature-card">
+                <div className="feature-icon-wrapper">📥</div>
+                <h3>CSV Data Export</h3>
+                <p>Filter, slice, and group your dataset dynamically and download extracted CSV files directly from the chat interface.</p>
+              </div>
+              <div className="feature-card">
+                <div className="feature-icon-wrapper">📂</div>
+                <h3>Multi-Format Support</h3>
+                <p>Supports CSV, Excel (`.xlsx`, `.xls` with sheet selection), and JSON tabular dataset uploads seamlessly.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Developer Spotlight Section */}
+          <section id="developer" className="landing-section" style={{ paddingTop: '2rem' }}>
+            <div className="section-header">
+              <h2 className="section-title">Developer Spotlight</h2>
+              <p className="section-subtitle">Architected and developed with high-performance full-stack AI technologies.</p>
+            </div>
+
+            <div className="developer-card">
+              <div className="developer-avatar-wrapper">
+                <div className="developer-avatar-large">SK</div>
+                <div className="developer-title-badge">Lead Developer</div>
+              </div>
+              <div className="developer-info">
+                <h3>Sidharth Kumar</h3>
+                <p className="developer-role">AI Full Stack Developer</p>
+                <p className="developer-bio">
+                  Specialized in building end-to-end intelligent AI web applications, conversational data intelligence frameworks, LLM orchestrations, and secure sandbox execution engines.
+                </p>
+                <div className="developer-contact-buttons">
+                  <a 
+                    href="https://www.linkedin.com/in/sidharth-kumar-12537b321/" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="btn-social linkedin"
+                  >
+                    <Icons.Github /> LinkedIn Profile
+                  </a>
+                  <a 
+                    href="mailto:sidharthkumar7177@gmail.com" 
+                    className="btn-social"
+                  >
+                    <Icons.Mail /> Email Developer
+                  </a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Footer Section */}
+          <footer id="contact" className="landing-footer">
+            <div className="footer-content">
+              <div className="landing-brand" onClick={() => setAuthMode('LANDING')}>
+                <Icons.Spark /> DataWhisperer
+              </div>
+              <div className="landing-nav-links">
+                <a href="#home" className="landing-nav-link">Home</a>
+                <a href="#features" className="landing-nav-link">Features</a>
+                <a href="#developer" className="landing-nav-link">Developer</a>
+                <span 
+                  className="landing-nav-link" 
+                  onClick={() => setAuthMode('LOGIN')}
+                >
+                  Log In
+                </span>
+                <span 
+                  className="landing-nav-link" 
+                  onClick={() => setAuthMode('REGISTER')}
+                  style={{ color: 'var(--color-primary)' }}
+                >
+                  Register
+                </span>
+              </div>
+            </div>
+            <div className="footer-copyright">
+              © {new Date().getFullYear()} DataWhisperer AI. Created by <strong>Sidharth Kumar</strong> (AI Full Stack Developer). All rights reserved.
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
     return (
       <div className="auth-container">
-
+        <div style={{ position: 'absolute', top: '1.5rem', left: '2rem' }}>
+          <button 
+            className="btn-nav-outline" 
+            onClick={() => setAuthMode('LANDING')}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+          >
+            ← Back to Home
+          </button>
+        </div>
 
         {authMode === 'LOGIN' && (
           <form className="auth-card" onSubmit={handleLogin}>
             <div className="auth-header">
-              <h1 className="auth-logo">DataWhisperer</h1>
+              <h1 className="auth-logo" onClick={() => setAuthMode('LANDING')} style={{ cursor: 'pointer' }}>DataWhisperer</h1>
               <p className="auth-subtitle">Unlock insights with conversational intelligence</p>
             </div>
             <h2>Welcome back</h2>
