@@ -993,3 +993,106 @@ body::before {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+/* Premium Aesthetic AI Loading & Thinking Indicators */
+.loading-row {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.loading-bubble {
+  background: rgba(16, 185, 129, 0.04) !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.08) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-bubble::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.12), transparent);
+  animation: shimmerPass 2s infinite;
+}
+
+@keyframes shimmerPass {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(50%); }
+}
+
+.ai-thinking-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.2rem 0;
+}
+
+.ai-thinking-text {
+  font-size: 0.9rem;
+  color: var(--color-primary);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.ai-thinking-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ai-thinking-dots .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulseBlink 1.4s infinite ease-in-out both;
+}
+
+.ai-thinking-dots .dot-1 { animation-delay: 0s; }
+.ai-thinking-dots .dot-2 { animation-delay: 0.2s; }
+.ai-thinking-dots .dot-3 { animation-delay: 0.4s; }
+
+@keyframes pulseBlink {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+    box-shadow: 0 0 8px var(--color-primary);
+  }
+}
+
+/* Chat Input Active Shimmer State */
+.chat-input-wrapper.is-loading {
+  position: relative;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15) !important;
+  overflow: hidden;
+}
+
+.chat-input-wrapper.is-loading::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #10b981, #7c3aed, #10b981);
+  background-size: 200% 100%;
+  animation: borderGlow 1.5s linear infinite;
+}
+
+@keyframes borderGlow {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+.spinner-icon {
+  animation: spin 1s linear infinite;
+}
