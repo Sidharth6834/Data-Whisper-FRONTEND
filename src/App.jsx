@@ -97,8 +97,8 @@ export default function App() {
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
   const [displayName, setDisplayName] = useState(localStorage.getItem('displayName') || '');
   const [authMode, setAuthMode] = useState('LANDING'); // LANDING, LOGIN, REGISTER, FORGOT_PASSWORD, RESET_PASSWORD
-  const [loginEmail, setLoginEmail] = useState('admin@company.com');
-  const [loginPass, setLoginPass] = useState('password123');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPass, setLoginPass] = useState('');
   
   // Register State
   const [registerEmail, setRegisterEmail] = useState('');
@@ -1648,7 +1648,7 @@ export default function App() {
                 {(displayName || username || 'JD').substring(0, 2).toUpperCase()}
               </div>
               <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.1rem', color: 'var(--color-text-bright)' }}>
-                {displayName || (username === 'admin' ? 'John Doe' : username)}
+                {displayName || username}
               </h4>
               <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--color-text-muted)', wordBreak: 'break-all' }}>
                 {username}
