@@ -622,6 +622,14 @@ export default function App() {
     return str;
   };
 
+  // Smooth scroll handler for landing page navigation
+  const scrollToSection = (id) => {
+    const elem = document.getElementById(id);
+    if (elem) {
+      elem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   // Render Landing Page / Auth Screens if not authenticated
   if (!token) {
     if (authMode === 'LANDING') {
@@ -629,15 +637,15 @@ export default function App() {
         <div className="landing-page">
           {/* Navbar */}
           <header className="landing-navbar">
-            <div className="landing-brand" onClick={() => setAuthMode('LANDING')}>
+            <div className="landing-brand" onClick={() => scrollToSection('home')}>
               <Icons.Spark /> DataWhisperer
             </div>
             <nav className="landing-nav-links">
-              <a href="#home" className="landing-nav-link">Home</a>
-              <a href="#features" className="landing-nav-link">Features</a>
-              <a href="#about" className="landing-nav-link">About Us</a>
-              <a href="#developer" className="landing-nav-link">Developer</a>
-              <a href="#contact" className="landing-nav-link">Contact</a>
+              <span className="landing-nav-link" onClick={() => scrollToSection('home')}>Home</span>
+              <span className="landing-nav-link" onClick={() => scrollToSection('features')}>Features</span>
+              <span className="landing-nav-link" onClick={() => scrollToSection('about')}>About Us</span>
+              <span className="landing-nav-link" onClick={() => scrollToSection('developer')}>Developer</span>
+              <span className="landing-nav-link" onClick={() => scrollToSection('contact')}>Contact</span>
             </nav>
             <div className="landing-nav-actions">
               <button 
@@ -768,6 +776,33 @@ export default function App() {
             </div>
           </section>
 
+          {/* About Us Section */}
+          <section id="about" className="landing-section" style={{ paddingTop: '2rem' }}>
+            <div className="section-header">
+              <h2 className="section-title">About DataWhisperer</h2>
+              <p className="section-subtitle">Empowering non-technical domain experts to interact with complex datasets securely and effortlessly.</p>
+            </div>
+            <div style={{ 
+              background: 'rgba(13, 12, 28, 0.6)', 
+              border: '1px solid rgba(255, 255, 255, 0.08)', 
+              borderRadius: '20px', 
+              padding: '2.5rem', 
+              backdropFilter: 'blur(20px)',
+              maxWidth: '900px',
+              margin: '0 auto',
+              lineHeight: '1.7',
+              fontSize: '0.95rem',
+              color: 'var(--color-text-muted)'
+            }}>
+              <p style={{ marginBottom: '1.25rem' }}>
+                Traditional data analytics requires deep proficiency in Python, SQL, or specialized BI software. DataWhisperer bridges this gap by integrating state-of-the-art Large Language Models with a deterministic Python AST code execution environment.
+              </p>
+              <p style={{ margin: 0 }}>
+                By isolating Python executions within a sandboxed environment, DataWhisperer ensures zero hallucinations in metric calculations, precise chart generations, and complete security for conversational data discovery.
+              </p>
+            </div>
+          </section>
+
           {/* Developer Spotlight Section */}
           <section id="developer" className="landing-section" style={{ paddingTop: '2rem' }}>
             <div className="section-header">
@@ -809,13 +844,14 @@ export default function App() {
           {/* Footer Section */}
           <footer id="contact" className="landing-footer">
             <div className="footer-content">
-              <div className="landing-brand" onClick={() => setAuthMode('LANDING')}>
+              <div className="landing-brand" onClick={() => scrollToSection('home')}>
                 <Icons.Spark /> DataWhisperer
               </div>
               <div className="landing-nav-links">
-                <a href="#home" className="landing-nav-link">Home</a>
-                <a href="#features" className="landing-nav-link">Features</a>
-                <a href="#developer" className="landing-nav-link">Developer</a>
+                <span className="landing-nav-link" onClick={() => scrollToSection('home')}>Home</span>
+                <span className="landing-nav-link" onClick={() => scrollToSection('features')}>Features</span>
+                <span className="landing-nav-link" onClick={() => scrollToSection('about')}>About Us</span>
+                <span className="landing-nav-link" onClick={() => scrollToSection('developer')}>Developer</span>
                 <span 
                   className="landing-nav-link" 
                   onClick={() => setAuthMode('LOGIN')}
