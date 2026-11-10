@@ -59,9 +59,34 @@ const Icons = {
       <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
     </svg>
   ),
-  Spark: () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  Logo: ({ size = 22 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="brand-logo-mark">
+      <rect x="2" y="2" width="20" height="20" rx="6" fill="#18181b" />
+      <line x1="6.5" y1="10" x2="6.5" y2="14" stroke="#d6d3d1" strokeWidth="2" strokeLinecap="round" />
+      <line x1="10.5" y1="7" x2="10.5" y2="17" stroke="#d97706" strokeWidth="2.2" strokeLinecap="round" />
+      <line x1="14.5" y1="9" x2="14.5" y2="15" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" />
+      <line x1="18.5" y1="11" x2="18.5" y2="13" stroke="#a8a29e" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  ),
+  EngineBadgeIcon: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12" />
+    </svg>
+  ),
+  PromptIcon: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="4 17 10 11 4 5" />
+      <line x1="12" y1="19" x2="20" y2="19" />
+    </svg>
+  ),
+  Spark: ({ size = 20 }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="brand-logo-mark">
+      <rect x="2" y="2" width="20" height="20" rx="6" fill="#18181b" />
+      <line x1="6.5" y1="10" x2="6.5" y2="14" stroke="#d6d3d1" strokeWidth="2" strokeLinecap="round" />
+      <line x1="10.5" y1="7" x2="10.5" y2="17" stroke="#d97706" strokeWidth="2.2" strokeLinecap="round" />
+      <line x1="14.5" y1="9" x2="14.5" y2="15" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" />
+      <line x1="18.5" y1="11" x2="18.5" y2="13" stroke="#a8a29e" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   ),
   Paperclip: () => (
@@ -773,7 +798,7 @@ export default function App() {
           {/* Navbar */}
           <header className="landing-navbar">
             <div className="landing-brand" onClick={() => scrollToSection('home')}>
-              <Icons.Spark /> DataWhisperer
+              <Icons.Logo /> DataWhisperer
             </div>
             <nav className="landing-nav-links">
               <span className="landing-nav-link" onClick={() => scrollToSection('home')}>Home</span>
@@ -802,7 +827,7 @@ export default function App() {
           <section id="home" className="landing-hero">
             <div>
               <div className="hero-pill-badge">
-                <Icons.Spark /> Conversational Data Analytics Engine
+                <Icons.EngineBadgeIcon /> Conversational Data Analytics Engine
               </div>
               <h1 className="hero-title">
                 Transform Raw Data into <span className="gradient-span">Conversational Intelligence</span>
@@ -853,7 +878,7 @@ export default function App() {
                 <span style={{ fontSize: '0.75rem', color: 'var(--color-primary)', fontWeight: 600 }}>LIVE DEMO MOCKUP</span>
               </div>
               <div className="mockup-prompt-box">
-                <Icons.Spark /> "Show sales comparison by region and plot a bar chart"
+                <Icons.PromptIcon /> "Show sales comparison by region and plot a bar chart"
               </div>
               <div className="mockup-chart-container">
                 <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginBottom: '0.75rem', display: 'flex', justifyContent: 'space-between' }}>
@@ -912,29 +937,91 @@ export default function App() {
           </section>
 
           {/* About Us Section */}
-          <section id="about" className="landing-section" style={{ paddingTop: '2rem' }}>
+          <section id="about" className="landing-section">
             <div className="section-header">
               <h2 className="section-title">About DataWhisperer</h2>
               <p className="section-subtitle">Empowering non-technical domain experts to interact with complex datasets securely and effortlessly.</p>
             </div>
-            <div style={{ 
-              background: 'rgba(13, 12, 28, 0.6)', 
-              border: '1px solid rgba(255, 255, 255, 0.08)', 
-              borderRadius: '20px', 
-              padding: '2.5rem', 
-              backdropFilter: 'blur(20px)',
-              maxWidth: '900px',
-              margin: '0 auto',
-              lineHeight: '1.7',
-              fontSize: '0.95rem',
-              color: 'var(--color-text-muted)'
-            }}>
-              <p style={{ marginBottom: '1.25rem' }}>
-                Traditional data analytics requires deep proficiency in Python, SQL, or specialized BI software. DataWhisperer bridges this gap by integrating state-of-the-art Large Language Models with a deterministic Python AST code execution environment.
-              </p>
-              <p style={{ margin: 0 }}>
-                By isolating Python executions within a sandboxed environment, DataWhisperer ensures zero hallucinations in metric calculations, precise chart generations, and complete security for conversational data discovery.
-              </p>
+            
+            <div className="about-split-container">
+              {/* Left Column: Narrative & Verification Pillars */}
+              <div className="about-narrative-card">
+                <div className="about-enterprise-badge">
+                  <Icons.Shield /> Enterprise AST Architecture
+                </div>
+                <p className="about-narrative-text">
+                  Traditional data analytics requires deep proficiency in Python, SQL, or specialized BI software. DataWhisperer bridges this gap by integrating state-of-the-art Large Language Models with a deterministic Python AST code execution environment.
+                </p>
+                <p className="about-narrative-text" style={{ margin: 0 }}>
+                  By isolating Python executions within a sandboxed environment, DataWhisperer ensures zero hallucinations in metric calculations, precise chart generations, and complete security for conversational data discovery.
+                </p>
+                <div className="about-pillars-grid">
+                  <div className="about-pillar-item">
+                    <span className="pillar-check">✓</span>
+                    <span>Zero Metric Hallucinations</span>
+                  </div>
+                  <div className="about-pillar-item">
+                    <span className="pillar-check">✓</span>
+                    <span>Deterministic AST Sandbox</span>
+                  </div>
+                  <div className="about-pillar-item">
+                    <span className="pillar-check">✓</span>
+                    <span>Sub-second Execution Flow</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Visual Processing Pipeline Widget */}
+              <div className="about-pipeline-card">
+                <div className="pipeline-header">
+                  <div className="pipeline-title-group">
+                    <span className="pipeline-indicator-dot"></span>
+                    <h4>Execution Architecture</h4>
+                  </div>
+                  <span className="pipeline-tag">Deterministic Engine</span>
+                </div>
+
+                <div className="pipeline-flow">
+                  {/* Step 1 */}
+                  <div className="pipeline-node">
+                    <div className="node-number">01</div>
+                    <div className="node-details">
+                      <div className="node-label">Natural Language Query</div>
+                      <div className="node-sub">"Compare regional revenue by product & plot bar chart"</div>
+                    </div>
+                  </div>
+
+                  {/* Flow Connector */}
+                  <div className="pipeline-connector">
+                    <div className="connector-stem"></div>
+                    <div className="connector-arrow">↓</div>
+                  </div>
+
+                  {/* Step 2 */}
+                  <div className="pipeline-node node-active">
+                    <div className="node-number active">02</div>
+                    <div className="node-details">
+                      <div className="node-label">Isolated Python AST Sandbox</div>
+                      <div className="node-sub">Static AST code validation • Native Pandas execution</div>
+                    </div>
+                  </div>
+
+                  {/* Flow Connector */}
+                  <div className="pipeline-connector">
+                    <div className="connector-stem"></div>
+                    <div className="connector-arrow">↓</div>
+                  </div>
+
+                  {/* Step 3 */}
+                  <div className="pipeline-node">
+                    <div className="node-number">03</div>
+                    <div className="node-details">
+                      <div className="node-label">Verified Insights & Charts</div>
+                      <div className="node-sub">100% verified accuracy • Real-time Matplotlib plots & CSV</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -980,7 +1067,7 @@ export default function App() {
           <footer id="contact" className="landing-footer">
             <div className="footer-content">
               <div className="landing-brand" onClick={() => scrollToSection('home')}>
-                <Icons.Spark /> DataWhisperer
+                <Icons.Logo /> DataWhisperer
               </div>
               <div className="landing-nav-links">
                 <span className="landing-nav-link" onClick={() => scrollToSection('home')}>Home</span>
@@ -1395,7 +1482,7 @@ export default function App() {
     <div className="app-layout">
       {/* Sidebar Panel */}
       <aside className="sidebar">
-        <h1 className="sidebar-title">DataWhisperer</h1>
+        <h1 className="sidebar-title"><Icons.Logo size={22} /> DataWhisperer</h1>
 
         <button 
           className="btn-gradient" 
@@ -1444,9 +1531,9 @@ export default function App() {
         {/* Recent Chats history list */}
         <div className="sidebar-section">
           <div className="sidebar-label">🕒 Recent Chats</div>
-          <div className="chats-list" style={{ maxHeight: '180px', overflowY: 'auto' }}>
+          <div className="chats-list">
             {sessions.length === 0 ? (
-              <div style={{ color: 'var(--color-text-muted)', fontSize: '0.75rem', padding: '0.5rem', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.05)', borderRadius: '6px' }}>
+              <div className="empty-chats-hint">
                 No recent chats. Upload a file to begin!
               </div>
             ) : (
@@ -1474,10 +1561,10 @@ export default function App() {
           <div className="sidebar-label">Active Dataset</div>
           {!dataset ? (
             !isSystemReady ? (
-              <div className="dropzone disabled" style={{ cursor: 'not-allowed', borderColor: 'rgba(168, 85, 247, 0.2)', background: 'rgba(168, 85, 247, 0.05)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.25rem', textAlign: 'center' }}>
-                <div style={{ width: '1.5rem', height: '1.5rem', border: '3px solid rgba(168, 85, 247, 0.3)', borderTopColor: 'var(--color-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: '0.5rem' }}></div>
-                <div style={{ fontSize: '0.75rem', fontWeight: 500, color: 'var(--color-text-primary)' }}>Waking up AI Engine...</div>
-                <div style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)', marginTop: '0.2rem' }}>Free servers take ~30s to boot up.</div>
+              <div className="dropzone disabled waking-state">
+                <div className="waking-spinner"></div>
+                <div className="waking-title">Waking up AI Engine...</div>
+                <div className="waking-subtitle">Free servers take ~30s to boot up.</div>
               </div>
             ) : (
               <div 
@@ -1551,7 +1638,7 @@ export default function App() {
             <button className="btn-secondary" style={{ padding: '0.4rem 0.75rem', fontSize: '0.75rem' }} onClick={() => setShowShareModal(true)} title="Share Analysis Session">
               <Icons.Share /> Share
             </button>
-            <span style={{ color: 'rgba(255,255,255,0.2)', pointerEvents: 'none' }}><Icons.Broadcast /></span>
+            <span style={{ color: 'var(--color-text-subtle)', pointerEvents: 'none' }}><Icons.Broadcast /></span>
           </div>
         </header>
 
@@ -1606,7 +1693,7 @@ export default function App() {
                     <div className="message-bubble">
                       {msg.role === 'assistant' && (
                         <div className="assistant-name-tag">
-                          <Icons.Spark /> DataWhisperer AI
+                          <Icons.Logo size={16} /> DataWhisperer AI
                         </div>
                       )}
                       <div>{msg.content}</div>
@@ -1671,7 +1758,7 @@ export default function App() {
             <div className="message-row assistant loading-row">
               <div className="message-bubble loading-bubble">
                 <div className="assistant-name-tag">
-                  <Icons.Spark /> DataWhisperer AI
+                  <Icons.Logo size={16} /> DataWhisperer AI
                 </div>
                 <div className="ai-thinking-container">
                   <span className="ai-thinking-text">Analyzing dataset & generating insights</span>
@@ -1801,29 +1888,21 @@ export default function App() {
               </p>
             </div>
 
-            <div style={{ 
-              background: 'rgba(255, 255, 255, 0.03)', 
-              borderRadius: '8px', 
-              padding: '1rem', 
-              marginBottom: '1.5rem',
-              border: '1px solid rgba(255, 255, 255, 0.05)',
-              textAlign: 'left'
-            }}>
+            <div className="profile-tier-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
                 <span style={{ color: 'var(--color-text-muted)' }}>Account Tier:</span>
-                <span style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Pro Member</span>
+                <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>Pro Member</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
                 <span style={{ color: 'var(--color-text-muted)' }}>Sign-In Method:</span>
-                <span style={{ color: 'var(--color-text-bright)' }}>
+                <span style={{ color: 'var(--color-text-heading)', fontWeight: 500 }}>
                   {username.includes('@gmail.com') || displayName.includes('@') ? 'Google OAuth' : 'Standard Credentials'}
                 </span>
               </div>
             </div>
 
             <button 
-              className="btn-gradient" 
-              style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', background: 'linear-gradient(135deg, #ef4444, #b91c1c)' }} 
+              className="btn-danger" 
               onClick={handleLogout}
             >
               Log Out
@@ -1854,13 +1933,12 @@ export default function App() {
             </p>
 
             {/* Share Link Input */}
-            <div className="share-link-group" style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem' }}>
+            <div className="share-link-group">
               <input 
                 type="text" 
                 readOnly 
-                className="chat-input" 
+                className="share-link-input" 
                 value={`${window.location.origin}${window.location.pathname}?session=${sessionId || 'live'}`}
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-color)', borderRadius: '8px', fontSize: '0.8rem', padding: '0.6rem 0.8rem', flexGrow: 1 }}
               />
               <button 
                 className="btn-gradient" 
